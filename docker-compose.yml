@@ -1,0 +1,15 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: petcare_backend
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./backend:/app
+
+    restart: always
