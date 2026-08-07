@@ -1,10 +1,13 @@
 services:
-
   backend:
     build:
       context: ./backend
 
     container_name: petcare_backend
+
+
+    env_file:
+      - .env
 
     ports:
       - "8000:8000"
@@ -13,3 +16,27 @@ services:
       - ./backend:/app
 
     restart: always
+
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17
+
+    container_name: petcare_db
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: always
+
+volumes:
+  postgres_data:
