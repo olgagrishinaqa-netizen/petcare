@@ -29,18 +29,19 @@ pipeline {
             }
         }
 
-        stage('3. Deploy / Run Services') {
-            steps {
-                echo 'Копирование файла .env и запуск сервисов через Docker Compose...'
-                // Копируем актуальный файл окружения в рабочую директорию Jenkins
-                sh 'cp /home/vm/petcare/.env .'
-                
-                // Перезапуск сервисов
-                sh 'docker compose down || true'
-                sh 'docker compose up -d --build'
-            }
-        }
-    }
+             stage('3. Deploy / Run Services') {
+           steps {
+               echo 'Создание .env файла из секретов Jenkins и деплой...'
+               withCredentials([string(credentialsId: 'my-env-file-secret', variable: 'ENV_FILE_CONTENT')]) {
+                   // Записываем содержимое защищенной переменной в файл .env на сервере
+                   sh 'echo "$ENV_FILE_CONTENT" > .env'
+             }
+
+             // Запуск сервисов
+             sh 'docker compose down || true'
+             sh 'docker compose up -d --build'
+         }
+     }
 
     post {
         success {
