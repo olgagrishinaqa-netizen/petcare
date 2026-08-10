@@ -15,7 +15,7 @@ pipeline {
                     steps {
                         echo 'Запуск проверки кода и линтеров...'
                         // Здесь можно добавить проверку синтаксиса или тесты
-                        sh 'python3 -c "print(\"Code check passed successfully\")"'
+                        sh 'python3 -c "print(\'Code check passed successfully\')"'
                     }
                 }
                 stage('Docker Image Build') {
