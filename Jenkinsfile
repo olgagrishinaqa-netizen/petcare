@@ -14,7 +14,6 @@ pipeline {
                 stage('Code Linting / Tests Check') {
                     steps {
                         echo 'Запуск проверки кода и линтеров...'
-                        // Исправленный вызов Python для проверки кода
                         sh 'python3 -c "print(\'Code check passed successfully\')"'
                     }
                 }
@@ -29,19 +28,18 @@ pipeline {
             }
         }
 
-             stage('3. Deploy / Run Services') {
-           steps {
-               echo 'Создание .env файла из секретов Jenkins и деплой...'
-               withCredentials([string(credentialsId: 'my-env-file-secret', variable: 'ENV_FILE_CONTENT')]) {
-                   // Записываем содержимое защищенной переменной в файл .env на сервере
-                   sh 'echo "$ENV_FILE_CONTENT" > .env'
-               }
-
-             // Запуск сервисов
-             sh 'docker compose down || true'
-             sh 'docker compose up -d --build'
-         }
-     }
+        stage('3. Deploy / Run Services') {
+            steps {
+                echo 'Создание .env файла из секретов Jenkins и деплой...'
+                withCredentials([string(credentialsId: 'my-env-file-secret', variable: 'ENV_FILE_CONTENT')]) {
+                    sh 'echo "$ENV_FILE_CONTENT" > .env'
+                }
+                
+                sh 'docker compose down || true'
+                sh 'docker compose up -d --build'
+            }
+        }
+    }
 
     post {
         success {
