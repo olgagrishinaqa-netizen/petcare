@@ -35,7 +35,7 @@ pipeline {
                withCredentials([string(credentialsId: 'my-env-file-secret', variable: 'ENV_FILE_CONTENT')]) {
                    // Записываем содержимое защищенной переменной в файл .env на сервере
                    sh 'echo "$ENV_FILE_CONTENT" > .env'
-             }
+               }
 
              // Запуск сервисов
              sh 'docker compose down || true'
