@@ -11,8 +11,6 @@ from app.models.vaccination import Vaccination
 from app.api.vaccinations import router as vaccinations_router
 from app.models.flea_tick_treatment import FleaTickTreatment
 from app.api.flea_tick_treatments import router as flea_tick_treatments_router
-from app.models.note import Note
-from app.api.notes import router as notes_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -27,8 +25,7 @@ app.include_router(users_router)
 app.include_router(pets_router)
 app.include_router(dewormings.router)
 app.include_router(vaccinations_router)
-app.include_router(flea_tick_treatments_router)
-app.include_router(notes_router)
+
 
 
 @app.get("/health")
