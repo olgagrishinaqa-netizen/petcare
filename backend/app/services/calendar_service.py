@@ -1,0 +1,158 @@
+from datetime import date
+
+from sqlalchemy.orm import Session
+
+from app.models.deworming import Deworming
+from app.models.flea_tick_treatment import FleaTickTreatment
+from app.models.note import Note
+from app.models.reminder import Reminder
+from app.models.vaccination import Vaccination
+
+
+def get_pet_calendar(
+    db: Session,
+    pet_id: int,
+    start_date: date,
+    end_date: date,
+):
+    events = []
+
+    vaccinations = (
+        db.query(Vaccination)
+        .filter(
+            Vaccination.pet_id == pet_id,
+            Vaccination.date >= start_date,
+            Vaccination.date <= end_date,
+        )
+        .all()
+    )
+
+    for vaccination in vaccinations:
+        events.append({
+            "id": vaccination.id,
+            "pet_id": pet_id,
+            "event_type": "vaccination",
+            "title": f"Вакцинация: {vaccination.vaccine}",
+            "date": vaccination.date,
+            "note": vaccination.note,
+            "source_id": vaccination.id,
+        })
+ 
+        if vaccination.next_date is not None:
+            events.append({
+                "id": vaccination.id,
+                "pet_id": pet_id,
+                "event_type": "vaccination_next",
+                "title": f"Следующая вакцинация: {vaccination.vaccine}",
+                "date": vaccination.next_date,
+                "note": vaccination.note,
+                "source_id": vaccination.id,
+            })
+
+    dewormings = (
+        db.query(Deworming)
+        .filter(
+            Deworming.pet_id == pet_id,
+            Deworming.date >= start_date,
+            Deworming.date <= end_date,
+        )
+        .all()
+    )
+
+    for deworming in dewormings:
+        events.append({
+            "id": deworming.id,
+            "pet_id": pet_id,
+            "event_type": "deworming",
+            "title": f"Обработка от глистов: {deworming.medicine}",
+            "date": deworming.date,
+            "note": deworming.notes,
+            "source_id": deworming.id,
+        })
+        if deworming.next_date is not None:
+            events.append({
+                "id": deworming.id,
+                "pet_id": pet_id,
+                "event_type": "deworming_next",
+                "title": f"Следующая обработка от глистов: {deworming.medicine}",
+                "date": deworming.next_date,
+                "note": deworming.notes,
+                "source_id": deworming.id,
+            })
+
+    flea_treatments = (
+        db.query(FleaTickTreatment)
+        .filter(
+            FleaTickTreatment.pet_id == pet_id,
+            FleaTickTreatment.date >= start_date,
+            FleaTickTreatment.date <= end_date,
+        )
+        .all()
+    )
+
+    for treatment in flea_treatments:
+        events.append({
+            "id": treatment.id,
+            "pet_id": pet_id,
+            "event_type": "flea_tick",
+            "title": f"Обработка от блох и клещей: {treatment.medicine}",
+            "date": treatment.date,
+            "note": treatment.note,
+            "source_id": treatment.id,
+        })
+        if treatment.next_date is not None:
+            events.append({
+                "id": treatment.id,
+                "pet_id": pet_id,
+                "event_type": "flea_tick_next",
+                "title": f"Следующая обработка от блох и клещей: {treatment.medicine}",
+                "date": treatment.next_date,
+                "note": treatment.note,
+                "source_id": treatment.id,
+            })
+
+    reminders = (
+        db.query(Reminder)
+        .filter(
+            Reminder.pet_id == pet_id,
+            Reminder.date >= start_date,
+            Reminder.date <= end_date,
+        )
+        .all()
+    )
+
+    for reminder in reminders:
+        events.append({
+            "id": reminder.id,
+            "pet_id": pet_id,
+            "event_type": "reminder",
+            "title": reminder.title,
+            "date": reminder.date,
+            "note": reminder.note,
+            "source_id": reminder.id,
+        })
+
+    notes = (
+        db.query(Note)
+        .filter(
+            Note.pet_id == pet_id,
+            Note.date >= start_date,
+            Note.date <= end_date,
+        )
+        .all()
+    )
+
+    for note in notes:
+        events.append({
+            "id": note.id,
+            "pet_id": pet_id,
+            "event_type": "note",
+            "title": "Заметка",
+            "date": note.date,
+            "note": note.text,
+            "source_id": note.id,
+        })
+
+    events.sort(key=lambda event: event["date"])
+
+    return events

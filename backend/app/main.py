@@ -13,6 +13,10 @@ from app.models.flea_tick_treatment import FleaTickTreatment
 from app.api.flea_tick_treatments import router as flea_tick_treatments_router
 from app.models.note import Note
 from app.api.notes import router as notes_router
+from app.models.reminder import Reminder
+from app.api.reminders import router as reminders_router
+from app.api.calendar import router as calendar_router
+
 
 
 Base.metadata.create_all(bind=engine)
@@ -29,7 +33,8 @@ app.include_router(dewormings.router)
 app.include_router(vaccinations_router)
 app.include_router(flea_tick_treatments_router)
 app.include_router(notes_router)
-
+app.include_router(reminders_router)
+app.include_router(calendar_router)
 
 @app.get("/health")
 def health_check():

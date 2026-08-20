@@ -7,28 +7,27 @@ from app.schemas.deworming import DewormingCreate
 def create_deworming(
     db: Session,
     pet_id: int,
-    data: DewormingCreate
+    deworming: DewormingCreate
 ):
-    deworming = Deworming(
+    db_deworming = Deworming(
         pet_id=pet_id,
-        date=data.date,
-        drug=data.drug,
-        note=data.note
+        date=deworming.date,
+        drug=deworming.drug,
+        next_date=deworming.next_date,
+        note=deworming.note,
     )
 
-    db.add(deworming)
+    db.add(db_deworming)
     db.commit()
-    db.refresh(deworming)
+    db.refresh(db_deworming)
 
-    return deworming
+    return db_deworming
 
 
 def get_pet_dewormings(
     db: Session,
     pet_id: int
 ):
-    return (
-        db.query(Deworming)
-        .filter(Deworming.pet_id == pet_id)
-        .all()
-    )
+    return db.query(Deworming).filter(
+        Deworming.pet_id == pet_id
+    ).all()

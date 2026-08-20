@@ -3,19 +3,17 @@ from datetime import date
 from pydantic import BaseModel
 
 
-class DewormingCreate(BaseModel):
+class ReminderCreate(BaseModel):
+    title: str
     date: date
-    drug: str
-    next_date: date | None = None
     note: str | None = None
 
 
-class DewormingResponse(BaseModel):
+class ReminderResponse(BaseModel):
     id: int
     pet_id: int
+    title: str
     date: date
-    drug: str
-    next_date: date | None
     note: str | None
 
     class Config:

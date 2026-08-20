@@ -21,6 +21,11 @@ class Deworming(Base):
         String(100)
     )
 
+    next_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True
+    )
+
     note: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True

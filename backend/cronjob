@@ -1,0 +1,5 @@
+# Генерация напоминаний каждый день в 6:00 утра
+0 6 * * * root cd /app && /usr/local/bin/python3 /app/scripts/generate_reminders.py >> /var/log/cron.log 2>&1
+
+# Также запуск в 12:00 (на всякий случай)
+0 12 * * * root cd /app && /usr/local/bin/python3 /app/scripts/generate_reminders.py >> /var/log/cron.log 2>&1
