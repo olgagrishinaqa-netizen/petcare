@@ -64,9 +64,9 @@ def get_pet_calendar(
             "id": deworming.id,
             "pet_id": pet_id,
             "event_type": "deworming",
-            "title": f"Обработка от глистов: {deworming.medicine}",
+            "title": f"Обработка от глистов: {deworming.drug}",
             "date": deworming.date,
-            "note": deworming.notes,
+            "note": deworming.note,
             "source_id": deworming.id,
         })
         if deworming.next_date is not None:
@@ -74,9 +74,9 @@ def get_pet_calendar(
                 "id": deworming.id,
                 "pet_id": pet_id,
                 "event_type": "deworming_next",
-                "title": f"Следующая обработка от глистов: {deworming.medicine}",
+                "title": f"Следующая обработка от глистов: {deworming.drug}",
                 "date": deworming.next_date,
-                "note": deworming.notes,
+                "note": deworming.note,
                 "source_id": deworming.id,
             })
 
