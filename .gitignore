@@ -33,3 +33,7 @@ node_modules/
 dist/
 build/
 .terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
