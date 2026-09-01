@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.database import Base, engine
 from app.models.user import User
 from app.api.users import router as users_router
 from app.models.pet import Pet
@@ -18,9 +17,6 @@ from app.models.reminder import Reminder
 from app.api.reminders import router as reminders_router
 from app.api.calendar import router as calendar_router
 
-
-
-Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(
