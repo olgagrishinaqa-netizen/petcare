@@ -1,3 +1,5 @@
+name: PetCare CI/CD Pipeline
+
 on:
   push:
     branches:
@@ -56,9 +58,28 @@ jobs:
   backend:
     name: Backend Quality Checks
     runs-on: ubuntu-24.04
+    
+    # Поднимаем сервисную базу данных PostgreSQL внутри CI-контура
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: petcare_test
+          POSTGRES_USER: petcare_user
+          POSTGRES_PASSWORD: petcare_password
+        ports:
+          - 5432:5432
+        # Гарантируем, что база успела запуститься перед тестами
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     defaults:
       run:
         working-directory: backend
+        
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -66,7 +87,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12" # Синхронизируем с вашей локальной стабильной версией 3.12
           cache: pip
           cache-dependency-path: backend/requirements.txt
 
@@ -75,7 +96,15 @@ jobs:
 
       - name: Check Python syntax
         run: python -m compileall app
+
       - name: Run Tests
+        # Прокидываем переменные окружения для config.py бэкенда
+        env:
+          POSTGRES_DB: petcare_test
+          POSTGRES_USER: petcare_user
+          POSTGRES_PASSWORD: petcare_password
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         run: python -m pytest -v
 
   docker:
