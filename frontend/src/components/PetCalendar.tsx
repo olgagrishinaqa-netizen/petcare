@@ -69,6 +69,7 @@ function PetCalendar({ petId }: PetCalendarProps) {
     const startDate = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError(null);
 
